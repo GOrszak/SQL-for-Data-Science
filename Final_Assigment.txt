@@ -1,0 +1,596 @@
+Data Scientist Role Play: Profiling and Analyzing the Yelp Dataset Coursera Worksheet
+
+This is a 2-part assignment. In the first part, you are asked a series of questions that will help you profile and understand the data just like a data scientist would. For this first part of the assignment, you will be assessed both on the correctness of your findings, as well as the code you used to arrive at your answer. You will be graded on how easy your code is to read, so remember to use proper formatting and comments where necessary.
+
+In the second part of the assignment, you are asked to come up with your own inferences and analysis of the data for a particular research question you want to answer. You will be required to prepare the dataset for the analysis you choose to do. As with the first part, you will be graded, in part, on how easy your code is to read, so use proper formatting and comments to illustrate and communicate your intent as required.
+
+For both parts of this assignment, use this "worksheet." It provides all the questions you are being asked, and your job will be to transfer your answers and SQL coding where indicated into this worksheet so that your peers can review your work. You should be able to use any Text Editor (Windows Notepad, Apple TextEdit, Notepad ++, Sublime Text, etc.) to copy and paste your answers. If you are going to use Word or some other page layout application, just be careful to make sure your answers and code are lined appropriately.
+In this case, you may want to save as a PDF to ensure your formatting remains intact for you reviewer.
+
+
+
+Part 1: Yelp Dataset Profiling and Understanding
+
+1. Profile the data by finding the total number of records for each of the tables below:
+	
+i. Attribute table =  10000 
+ii. Business table =  10000 
+iii. Category table = 10000
+iv. Checkin table =  10000 
+v. elite_years table =  10000 
+vi. friend table =  10000 
+vii. hours table =  10000
+viii. photo table =   10000 
+ix. review table =  10000 
+x. tip table =   10000 
+xi. user table =  10000 
+	
+
+
+2. Find the total distinct records by either the foreign key or primary key for each table. If two foreign keys are listed in the table, please specify which foreign key.
+
+i. Business =  id: 10000
+ii. Hours =  business_id: 1562
+iii. Category = business_id: 2643
+iv. Attribute = business_id: 1115
+v. Review = id:10000, business_id: 8090, user_id: 9581
+vi. Checkin = business_id: 493
+vii. Photo =  id: 10000, business_id: 6493
+viii. Tip =  user_id: 537, business_id: 3979
+ix. User =   id: 10000
+x. Friend =  user_id: 11
+xi. Elite_years = user_id: 2780
+
+Note: Primary Keys are denoted in the ER-Diagram with a yellow key icon.	
+
+
+
+3. Are there any columns with null values in the Users table? Indicate "yes," or "no."
+
+	Answer: no
+	
+	
+	SQL code used to arrive at answer:
+
+SELECT COUNT(*)
+		FROM user
+		WHERE id IS NULL OR 
+		  name IS NULL OR 
+		  review_count IS NULL OR 
+		  yelping_since IS NULL OR
+		  useful IS NULL OR 
+		  funny IS NULL OR 
+		  cool IS NULL OR 
+		  fans IS NULL OR 
+		  average_stars IS NULL OR 
+		  compliment_hot IS NULL OR 
+		  compliment_more IS NULL OR 
+		  compliment_profile IS NULL OR 
+		  compliment_cute IS NULL OR 
+		  compliment_list IS NULL OR 
+		  compliment_note IS NULL OR 
+		  compliment_plain IS NULL OR 
+		  compliment_cool IS NULL OR 
+		  compliment_funny IS NULL OR 
+		  compliment_writer IS NULL OR 
+		  compliment_photos IS NULL 
+	
+	
+
+	
+4. For each table and column listed below, display the smallest (minimum), largest (maximum), and average (mean) value for the following fields:
+
+	i. Table: Review, Column: Stars
+	
+		min:	1	max:	5	avg: 3.7082
+		
+	
+	ii. Table: Business, Column: Stars
+	
+		min:	1.0	max:	5.0	avg: 3.6549
+		
+	
+	iii. Table: Tip, Column: Likes
+	
+		min:	0	max:	2	avg: 0.0144 
+		
+	
+	iv. Table: Checkin, Column: Count
+	
+		min:	1	max:	53	avg: 1.9414 
+		
+	
+	v. Table: User, Column: Review_count
+	
+		min:	0	max:	 2000	avg: 24.2995 
+		
+
+
+5. List the cities with the most reviews in descending order:
+
+	SQL code used to arrive at answer:
+
+SELECT  city,
+        SUM(review_count) AS review_sum
+FROM business
+GROUP BY city
+ORDER BY review_sum DESC
+	
+	
+	Copy and Paste the Result Below:
+
++-----------------+------------+
+| city            | review_sum |
++-----------------+------------+
+| Las Vegas       |      82854 |
+| Phoenix         |      34503 |
+| Toronto         |      24113 |
+| Scottsdale      |      20614 |
+| Charlotte       |      12523 |
+| Henderson       |      10871 |
+| Tempe           |      10504 |
+| Pittsburgh      |       9798 |
+| Montréal        |       9448 |
+| Chandler        |       8112 |
+| Mesa            |       6875 |
+| Gilbert         |       6380 |
+| Cleveland       |       5593 |
+| Madison         |       5265 |
+| Glendale        |       4406 |
+| Mississauga     |       3814 |
+| Edinburgh       |       2792 |
+| Peoria          |       2624 |
+| North Las Vegas |       2438 |
+| Markham         |       2352 |
+| Champaign       |       2029 |
+| Stuttgart       |       1849 |
+| Surprise        |       1520 |
+| Lakewood        |       1465 |
+| Goodyear        |       1155 |
++-----------------+------------+
+	
+
+	
+6. Find the distribution of star ratings to the business in the following cities:
+
+i. Avon
+
+SQL code used to arrive at answer:
+
+SELECT  stars,
+        COUNT(stars)
+FROM business
+WHERE city = 'Avon'
+GROUP BY stars
+
+
+Copy and Paste the Resulting Table Below (2 columns â star rating and count):
+
++-------+--------------+
+| stars | COUNT(stars) |
++-------+--------------+
+|   1.5 |            1 |
+|   2.5 |            2 |
+|   3.5 |            3 |
+|   4.0 |            2 |
+|   4.5 |            1 |
+|   5.0 |            1 |
++-------+--------------+
+
+
+ii. Beachwood
+
+SQL code used to arrive at answer:
+
+SELECT  stars,
+        COUNT(stars)
+FROM business
+WHERE city = 'Beachwood'
+GROUP BY stars
+
+
+Copy and Paste the Resulting Table Below (2 columns â star rating and count):
+
+
++-------+--------------+
+| stars | COUNT(stars) |
++-------+--------------+
+|   2.0 |            1 |
+|   2.5 |            1 |
+|   3.0 |            2 |
+|   3.5 |            2 |
+|   4.0 |            1 |
+|   4.5 |            2 |
+|   5.0 |            5 |
++-------+--------------+
+		
+
+
+7. Find the top 3 users based on their total number of reviews:
+		
+	SQL code used to arrive at answer:
+
+SELECT id,
+			   name,
+			   review_count
+		FROM user
+		ORDER BY review_count DESC
+		LIMIT 3	
+	
+		
+	Copy and Paste the Result Below:
+
++------------------------+--------+--------------+
+| id                     | name   | review_count |
++------------------------+--------+--------------+
+| -G7Zkl1wIWBBmD0KRy_sCw | Gerald |         2000 |
+| -3s52C4zL_DHRK0ULG6qtg | Sara   |         1629 |
+| -8lbUNlXVSoXqaRRiHiSNg | Yuri   |         1339 |
++------------------------+--------+--------------+
+		
+
+
+8. Does posing more reviews correlate with more fans?
+
+	No, there is not strong correlation between these two 
+
+	Please explain your findings and interpretation of the results:
+
+
+SELECT		   name,
+			   review_count,
+			   fans,
+			   yelping_since
+		FROM user
+		ORDER BY fans DESC, review_count DESC
+
++-----------+--------------+------+---------------------+
+| name      | review_count | fans | yelping_since       |
++-----------+--------------+------+---------------------+
+| Amy       |          609 |  503 | 2007-07-19 00:00:00 |
+| Mimi      |          968 |  497 | 2011-03-30 00:00:00 |
+| Harald    |         1153 |  311 | 2012-11-27 00:00:00 |
+| Gerald    |         2000 |  253 | 2012-12-16 00:00:00 |
+| Christine |          930 |  173 | 2009-07-08 00:00:00 |
+| Lisa      |          813 |  159 | 2009-10-05 00:00:00 |
+| Cat       |          377 |  133 | 2009-02-05 00:00:00 |
+| William   |         1215 |  126 | 2015-02-19 00:00:00 |
+| Fran      |          862 |  124 | 2012-04-05 00:00:00 |
+| Lissa     |          834 |  120 | 2007-08-14 00:00:00 |
+| Mark      |          861 |  115 | 2009-05-31 00:00:00 |
+| Tiffany   |          408 |  111 | 2008-10-28 00:00:00 |
+| bernice   |          255 |  105 | 2007-08-29 00:00:00 |
+| Roanna    |         1039 |  104 | 2006-03-28 00:00:00 |
+| .Hon      |         1246 |  101 | 2006-07-19 00:00:00 |
+| Angela    |          694 |  101 | 2010-10-01 00:00:00 |
+| Ben       |          307 |   96 | 2007-03-10 00:00:00 |
+| Linda     |          584 |   89 | 2005-08-07 00:00:00 |
+| Christina |          842 |   85 | 2012-10-08 00:00:00 |
+| Jessica   |          220 |   84 | 2009-01-12 00:00:00 |
+| Greg      |          408 |   81 | 2008-02-16 00:00:00 |
+| Nieves    |          178 |   80 | 2013-07-08 00:00:00 |
+| Sui       |          754 |   78 | 2009-09-07 00:00:00 |
+| Yuri      |         1339 |   76 | 2008-01-03 00:00:00 |
+| Nicole    |          161 |   73 | 2009-04-30 00:00:00 |
++-----------+--------------+------+---------------------+
+
+Additionally, sqllite does not have built in corr fuction (like in postgresql)
+
+
+select avg( (review_count - avg_x) * (fans - avg_y) )*avg( (review_count - avg_x) * (fans - avg_y) )/(var_x*var_y) as R2 
+from user, (select 
+      avg_x,
+      avg_y,
+      avg((review_count - avg_x)*(review_count - avg_x)) as var_x, 
+      avg((fans - avg_y)*(fans - avg_y)) as var_y 
+      from user, (select 
+          avg(review_count) as avg_x, 
+          avg(fans) as avg_y 
+          from user)
+  );
+
+
++----------------+
+|             R2 |
++----------------+
+| 0.437136492915 |
++----------------+
+	
+
+	
+9. Are there more reviews with the word "love" or with the word "hate" in them?
+
+	Answer: Much more with love word
+
+	
+	SQL code used to arrive at answer:
+
+SELECT COUNT(*)	
+		FROM review								
+		WHERE text LIKE "%love%"
+
++----------+
+| COUNT(*) |
++----------+
+|     1780 |
++----------+
+
+SELECT COUNT(*)	
+		FROM review								
+		WHERE text LIKE "%hate%"	
+
++----------+
+| COUNT(*) |
++----------+
+|      232 |
++----------+
+
+	
+	
+10. Find the top 10 users with the most fans:
+
+	SQL code used to arrive at answer:
+
+SELECT  id,
+        name,
+        fans
+FROM user
+ORDER BY fans DESC
+LIMIT 10 
+	
+	
+	Copy and Paste the Result Below:
+
++------------------------+-----------+------+
+| id                     | name      | fans |
++------------------------+-----------+------+
+| -9I98YbNQnLdAmcYfb324Q | Amy       |  503 |
+| -8EnCioUmDygAbsYZmTeRQ | Mimi      |  497 |
+| --2vR0DIsmQ6WfcSzKWigw | Harald    |  311 |
+| -G7Zkl1wIWBBmD0KRy_sCw | Gerald    |  253 |
+| -0IiMAZI2SsQ7VmyzJjokQ | Christine |  173 |
+| -g3XIcCb2b-BD0QBCcq2Sw | Lisa      |  159 |
+| -9bbDysuiWeo2VShFJJtcw | Cat       |  133 |
+| -FZBTkAZEXoP7CYvRV2ZwQ | William   |  126 |
+| -9da1xk7zgnnfO1uTVYGkA | Fran      |  124 |
+| -lh59ko3dxChBSZ9U7LfUw | Lissa     |  120 |
++------------------------+-----------+------+
+
+SELECT sqlite_version();
+
+
+
+City = Toronto	
+Category = Food
+		
+
+Part 2: Inferences and Analysis
+
+1. Pick one city and category of your choice and group the businesses in that city or category by their overall star rating. 
+Compare the businesses with 2-3 stars to the businesses with 4-5 stars and answer the following questions. 
+Include your code.
+
+City = Toronto	
+Category = Food
+	
+i. Do the two groups you chose to analyze have a different distribution of hours?
+
+Better reviewed business tends to open later and not for such a long time.
+
+
+ii. Do the two groups you chose to analyze have a different number of reviews?
+
+The more reviews they have the more likely to have better star rating
+         
+         
+iii. Are you able to infer anything from the location data provided between these two groups? Explain.
+
+Every business has different postal code and probe is not large so I can't infer anything with high accuracy.
+
+SQL code used for analysis:
+
+SELECT  B.name,
+			   B.review_count,
+			   H.hours,
+			   postal_code,
+        CASE WHEN stars <=3 THEN '2-3 stars'
+             WHEN stars BETWEEN 4 AND 5 THEN '4-5 stars'
+        ELSE 'excluded' END AS ranking
+FROM business B INNER JOIN hours H
+		ON B.id = H.business_id
+		INNER JOIN category C
+		ON C.business_id = B.id
+		WHERE (B.city == 'Toronto'
+		AND
+		C.category LIKE 'Food')
+		AND
+		(B.stars BETWEEN 2 AND 3
+		OR
+		B.stars BETWEEN 4 AND 5)
+		GROUP BY stars
+		ORDER BY ranking ASC
+
+
+		
+		
+2. Group business based on the ones that are open and the ones that are closed. What differences can you find between the ones that are still open and the ones that are closed?
+ List at least two differences and the SQL code you used to arrive at your answer.
+		
+i. Difference 1:
+
+AVG star for open
++---------------------+
+| ROUND(AVG(stars),2) |
++---------------------+
+|                3.68 |
++---------------------+
+
+AVG for is closed
++---------------------+
+| ROUND(AVG(stars),2) |
++---------------------+
+|                3.52 |
++---------------------+
+         
+
+Avg star rating for those who are open are higher than for closed.
+         
+ii. Difference 2:
+
+
+
+distribution of business grouped by states for open
+
++-------+--------------+
+| state | COUNT(state) |
++-------+--------------+
+| AZ    |         2590 |
+| NV    |         1621 |
+| ON    |         1383 |
+| OH    |          645 |
+| NC    |          626 |
+| PA    |          463 |
+| QC    |          396 |
+| WI    |          224 |
+| EDH   |          186 |
+| BW    |          181 |
+| IL    |           94 |
+| SC    |           31 |
+| HLD   |           11 |
+| FIF   |            5 |
+| MLN   |            5 |
+| ELN   |            4 |
+| C     |            3 |
+| NY    |            3 |
+| NYK   |            3 |
+| ST    |            2 |
+| WLN   |            2 |
+| ESX   |            1 |
+| NI    |            1 |
++-------+--------------+
+
+distribution of business grouped by states for closed
+
++-------+--------------+
+| state | COUNT(state) |
++-------+--------------+
+| AZ    |          452 |
+| NV    |          300 |
+| ON    |          281 |
+| OH    |          102 |
+| NC    |           96 |
+| PA    |           90 |
+| QC    |           69 |
+| EDH   |           51 |
+| WI    |           29 |
+| BW    |           21 |
+| IL    |           14 |
+| SC    |            8 |
+| MLN   |            3 |
+| ELN   |            2 |
+| HLD   |            1 |
+| NI    |            1 |
++-------+--------------+
+         
+
+Open business are much more wider by states for open than closed.
+         
+         
+SQL code used for analysis:
+
+SELECT ROUND(AVG(stars),2) FROM business
+WHERE is_open = 1; 
+
+SELECT ROUND(AVG(stars),2) FROM business
+WHERE is_open = 0; 
+
+
+SELECT state, COUNT(state)
+FROM business
+WHERE is_open = 0
+GROUP BY state
+ORDER BY COUNT(state) DESC; 
+
+
+SELECT state, COUNT(state)
+FROM business
+WHERE is_open = 1
+GROUP BY state
+ORDER BY COUNT(state) DESC; 
+
+
+
+	
+	
+3. For this last part of your analysis, you are going to choose the type of analysis you want to conduct on the Yelp dataset and are going to prepare the data for analysis.
+
+Ideas for analysis include: Parsing out keywords and business attributes for sentiment analysis, clustering businesses to find commonalities or anomalies between them, predicting the overall star rating for a business, predicting the number of fans a user will have, and so on. These are just a few examples to get you started, so feel free to be creative and come up with your own problem you want to solve. Provide answers, in-line, to all of the following:
+	
+i. Indicate the type of analysis you chose to do:
+         
+Problem: We have found investor who want to open new business, 
+he wants to take quick review of open businesses which are in Arizona or Nevada but he does not want to open in Las Vegas.
+
+His main goal was to spot his competition with star rating above 3.5 
+         
+ii. Write 1-2 brief paragraphs on the type of data you will need for your analysis and why you chose that data:
+
+I had to show name, address, city, stars and review count, and category
+
+Filtering data based on client's requirements (mentioned in paragraph i)
+                           
+                  
+iii. Output of your finished dataset:
+
++----------------------------------------+-------+-----------------------------------------------------+------------+-------------+-------+--------------+-------------------------+
+| name                                   | state | address                                             | city       | postal_code | stars | review_count | category                |
++----------------------------------------+-------+-----------------------------------------------------+------------+-------------+-------+--------------+-------------------------+
+| Bootleggers Modern American Smokehouse | AZ    | 3375 E Shea Blvd                                    | Phoenix    | 85028       |   4.0 |          431 | Barbeque                |
+| Green Corner Restaurant                | AZ    | 1038 W Southern Ave, Ste 1                          | Mesa       | 85210       |   5.0 |          267 | Restaurants             |
+| Taliesin West                          | AZ    | 12621 N Frank Lloyd Wright Blvd                     | Scottsdale | 85259       |   4.5 |          223 | Architectural Tours     |
+| Matt's Big Breakfast                   | AZ    | 3118 E Camelback Rd                                 | Phoenix    | 85016       |   4.0 |          188 | Restaurants             |
+| Christian Brothers Automotive          | AZ    | 290 E Ocotillo Rd                                   | Chandler   | 85249       |   5.0 |           63 | Transmission Repair     |
+| Race Day Mobile Detailing              | AZ    |                                                     | Phoenix    | 85023       |   5.0 |           40 | Car Wash                |
+| Highland Auto Repair                   | AZ    | 60 E Highland St                                    | Chandler   | 85225       |   4.5 |           33 | Automotive              |
+| Taqueria Y Cenaduria Culiacan          | AZ    | 9115 W Van Buren St                                 | Tolleson   | 85353       |   4.0 |           23 | Mexican                 |
+| Brake Masters                          | AZ    | 9240 W Peoria Ave                                   | Peoria     | 85345       |   4.0 |           22 | Automotive              |
+| White Dove Thrift Shoppe               | AZ    | 8461 E Mcdonald Dr                                  | Scottsdale | 85250       |   4.0 |           20 | Health & Medical        |
+| Back-Health Chiropractic               | AZ    | 4425 N 24th St, Ste 125                             | Phoenix    | 85016       |   5.0 |           19 | Health & Medical        |
+| Haggard Chiropractic                   | AZ    | 9675 W Camelback Rd                                 | Phoenix    | 85037       |   5.0 |           18 | Doctors                 |
+| Lifestyles Fitness Personal Training   | AZ    | 4685 S Ash Ave, Ste H-1                             | Tempe      | 85282       |   5.0 |           17 | Active Life             |
+| Health For Life: North Mesa            | AZ    | 3321 Reseda Cir, Ste 50                             | Mesa       | 85215       |   4.5 |           16 | Cannabis Clinics        |
+| Scent From Above Company               | AZ    | 2501 W Behrend Dr, Ste 67                           | Scottsdale | 85027       |   4.5 |           14 | Window Washing          |
+| Ahn & Perez, DDS                       | AZ    | 2039 S Mill Ave, Ste F                              | Tempe      | 85282       |   4.5 |           13 | Dentists                |
+| Pinnacle Fencing Solutions             | AZ    |                                                     | Phoenix    | 85060       |   4.0 |           13 | Fences & Gates          |
+| Dos Escuelas Dog Park                  | NV    | Desert Shadow Tl                                    | Henderson  | 89074       |   4.0 |           12 | Dog Parks               |
+| PC Savants                             | AZ    | 11966 W Candelaria Ct                               | Sun City   | 85373       |   5.0 |           11 | Mobile Phone Repair     |
+| Apache Wash Trailhead                  | AZ    | E Sonoran Desert Dr                                 | Phoenix    | 85085       |   5.0 |            9 | Active Life             |
+| Springmaster Garage Door Service       | AZ    | 1909 E Ray Rd, Ste 9-170                            | Chandler   | 85225       |   5.0 |            7 | Door Sales/Installation |
+| Sunset Eye Center                      | NV    | 299 N Pecos Rd                                      | Henderson  | 89074       |   4.0 |            7 | Doctors                 |
+| Adobe Montessori                       | AZ    | 6400 W Del Rio St                                   | Chandler   | 85226       |   5.0 |            5 | Montessori Schools      |
+| Brandi Gilstrap                        | NV    | 170 S Green Valley Pkwy, Ste 35, Sola Salons Studio | Henderson  | 89012       |   5.0 |            5 | Hair Salons             |
+| Clean Colonic                          | AZ    | 7560 S Willow Dr                                    | Tempe      | 85283       |   5.0 |            5 | Health & Medical        |
++----------------------------------------+-------+-----------------------------------------------------+------------+-------------+-------+--------------+-------------------------+
+         
+         
+iv. Provide the SQL code you used to create your final dataset:
+
+
+SELECT DISTINCT(b.name),
+        b.state,
+        b.address,
+        b.city, 
+        b.postal_code, 
+        b.stars, 
+        b.review_count,
+        c.category 
+FROM business AS b
+LEFT JOIN category AS c ON
+b.id = c.business_id
+WHERE is_open = 1 AND 
+(b.state = 'AZ' OR b.state = 'NV') AND 
+category <> 'None' AND
+stars > 3.5 AND
+city <> 'Las Vegas'
+GROUP BY name 
+ORDER BY  review_count DESC, stars DESC;
